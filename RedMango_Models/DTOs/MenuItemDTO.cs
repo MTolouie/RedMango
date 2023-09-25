@@ -1,19 +1,22 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Http;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace RedMango_DataLayer.Models;
+namespace RedMango_Models.DTOs;
 
-public class MenuItem
+public class MenuItemDTO
 {
-    [Key]
     public int Id { get; set; }
+
     [Required(ErrorMessage = "Name Is Required")]
     [MaxLength(100)]
     public string Name { get; set; }
+
+    [Required(ErrorMessage = "Description Is Required")]
     public string Description { get; set; }
     [Required(ErrorMessage = "Tag Is Required")]
     [MaxLength(100)]
@@ -26,5 +29,5 @@ public class MenuItem
     public double Price { get; set; }
     [Required(ErrorMessage = "Image Is Required")]
     [MaxLength(800)]
-    public string Image { get; set; }
+    public string Image{ get; set; }
 }

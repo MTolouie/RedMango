@@ -6,6 +6,6 @@ public class ApiResponse
 {
     public HttpStatusCode StatusCode { get; set; }
     public bool IsSuccessful { get; set; } = true;
-    public List<string> ErrorMessages { get; set; }
+    public string ErrorMessage { get; set; }
     public object Results { get; set; }
 }

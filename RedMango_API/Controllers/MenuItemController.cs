@@ -1,71 +1,109 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using RedMango_API.Models;
+using RedMango_API.Utilities;
 using RedMango_Business.Repository.IRepository;
+using RedMango_Models.DTOs;
 using System.Net;
 
-namespace RedMango_API.Controllers
+namespace RedMango_API.Controllers;
+
+[Route("api/[controller]/[action]")]
+[ApiController]
+public class MenuItemController : ControllerBase
 {
-    [Route("api/[controller]/[action]")]
-    [ApiController]
-    public class MenuItemController : ControllerBase
+    private readonly IMenuItemRepository _menuItemRepository;
+
+    public MenuItemController(IMenuItemRepository menuItemRepository)
     {
-        private readonly IMenuItemRepository _menuItemRepository;
-        private ApiResponse _apiResponse;
+        _menuItemRepository = menuItemRepository;
+    }
 
-        public MenuItemController(IMenuItemRepository menuItemRepository)
+    [HttpGet]
+    public async Task<IActionResult> GetAllMenuItems()
+    {
+        try
         {
-            _menuItemRepository = menuItemRepository;
-            _apiResponse = new ApiResponse();
-        }
+            var menuItems = await _menuItemRepository.GetAllMenuItems();
 
-        [HttpGet]
-        public async Task<IActionResult> GetAllMenuItems()
-        {
-            try
+            var statusCode = HttpStatusCode.OK;
+            if (menuItems is null)
             {
-                var menuItems = await _menuItemRepository.GetAllMenuItems();
+                statusCode = HttpStatusCode.NotFound;
+            }
 
-                _apiResponse.StatusCode = HttpStatusCode.OK;
-                if (menuItems is null)
+            var response = ApiResponseConfiguration.ConfigureResponse(true, statusCode, null, menuItems);
+
+            return Ok(response);
+        }
+        catch (Exception e)
+        {
+            var response = ApiResponseConfiguration.ConfigureResponse(false, HttpStatusCode.InternalServerError, e.Message, null);
+            return Ok(response);
+        }
+    }
+
+    [HttpGet("{id:int}")]
+    public async Task<IActionResult> GetMenuItem(int id)
+    {
+
+        try
+        {
+            var menuItem = await _menuItemRepository.GetMenuItem(id);
+
+            var statusCode = HttpStatusCode.OK;
+            if (menuItem is null)
+            {
+                statusCode = HttpStatusCode.NotFound;
+            }
+
+            var response = ApiResponseConfiguration.ConfigureResponse(true, statusCode, null, menuItem);
+            return Ok(response);
+
+        }
+        catch (Exception e)
+        {
+
+            var response = ApiResponseConfiguration.ConfigureResponse(false, HttpStatusCode.InternalServerError, e.Message, null);
+            return Ok(response);
+        }
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> CreateMenuItem([FromBody] MenuItemDTO createMenuItemDTO)
+    {
+
+        try
+        {
+            if (ModelState.IsValid)
+            {
+                if (createMenuItemDTO.Image is null && createMenuItemDTO.Image.Length == 0)
                 {
-                    _apiResponse.StatusCode = HttpStatusCode.NotFound;
+                    return BadRequest();
                 }
-                _apiResponse.Results = menuItems;
 
-            }
-            catch (Exception e)
-            {
-                _apiResponse.ErrorMessages.Add(e.Message);
-                _apiResponse.IsSuccessful = false;
-                _apiResponse.StatusCode = HttpStatusCode.BadGateway;
-            }
-            return Ok(_apiResponse);
-        }
-
-        [HttpGet("{id:int}")]
-        public async Task<IActionResult> GetMenuItem(int id)
-        {
-
-            try
-            {
-                var menuItem = await _menuItemRepository.GetMenuItem(id);
-
-                _apiResponse.StatusCode = HttpStatusCode.OK;
-                if (menuItem is null)
+                var result = await _menuItemRepository.CreateMenuItem(createMenuItemDTO);
+                var response = ApiResponseConfiguration.ConfigureResponse(true, HttpStatusCode.Created, null, null);
+                if (result is true)
                 {
-                    _apiResponse.StatusCode = HttpStatusCode.NotFound;
+                    return Ok(response);
                 }
-                _apiResponse.Results = menuItem;
+
+                response = ApiResponseConfiguration.ConfigureResponse(false, HttpStatusCode.BadRequest, "something went wrong", null);
+                return Ok(response);
 
             }
-            catch (Exception e)
+            else
             {
-                _apiResponse.ErrorMessages.Add(e.Message);
-                _apiResponse.IsSuccessful = false;
-                _apiResponse.StatusCode = HttpStatusCode.BadGateway;
+                var response = ApiResponseConfiguration.ConfigureResponse(false, HttpStatusCode.BadRequest, "Form Was Not Valid", null);
+                return Ok(response);
             }
-            return Ok(_apiResponse);
         }
+        catch (Exception e)
+        {
+            var response = ApiResponseConfiguration.ConfigureResponse(false, HttpStatusCode.InternalServerError, e.Message, null);
+            return Ok(response);
+        }
+
     }
 }

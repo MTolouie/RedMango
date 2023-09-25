@@ -22,6 +22,7 @@
   <ItemGroup>
     <ProjectReference Include="..\RedMango_Business\RedMango_Business.csproj" />
     <ProjectReference Include="..\RedMango_DataLayer\RedMango_DataLayer.csproj" />
+    <ProjectReference Include="..\RedMango_Models\RedMango_Models.csproj" />
   </ItemGroup>
 
 </Project>
