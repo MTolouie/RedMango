@@ -1,6 +1,5 @@
-﻿using Microsoft.AspNetCore.Http.HttpResults;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using RedMango_API.Models;
 using RedMango_API.Utilities;
 using RedMango_Business.Repository.IRepository;
 using RedMango_Models.DTOs;
@@ -106,4 +105,58 @@ public class MenuItemController : ControllerBase
         }
 
     }
+
+    [HttpPatch]
+    public async Task<IActionResult> UpdateMenuItem(int id,[FromBody] MenuItemDTO updateMenuItemDTO)
+    {
+        try
+        {
+            if (ModelState.IsValid)
+            {
+                var result = await _menuItemRepository.UpdateMenuItem(id, updateMenuItemDTO);
+                var response = ApiResponseConfiguration.ConfigureResponse(true, HttpStatusCode.Created, "Updated Successfuly", null);
+                if (result == true)
+                {
+                    return Ok(response);
+                }
+                response = ApiResponseConfiguration.ConfigureResponse(false, HttpStatusCode.InternalServerError, "Something Went Wrong", null);
+                return Ok(response);
+            }
+            else
+            {
+                var response = ApiResponseConfiguration.ConfigureResponse(false, HttpStatusCode.BadRequest, "Form Is Not Valid", null);
+                return Ok(response);
+            }
+        }
+        catch (Exception e)
+        {
+            var response = ApiResponseConfiguration.ConfigureResponse(false, HttpStatusCode.InternalServerError, e.Message, null);
+            return Ok(response);
+        }
+    }
+
+    [HttpDelete("{id:int}")]
+    public async Task<IActionResult> UpdateMenuItem(int id)
+    {
+        try
+        {
+            var result = await _menuItemRepository.DeleteMenuItemById(id);
+            var response = ApiResponseConfiguration.ConfigureResponse(true, HttpStatusCode.OK, "Deleted Successfuly", null);
+            
+            if(result == false)
+            {
+                response = ApiResponseConfiguration.ConfigureResponse(false, HttpStatusCode.InternalServerError, "something went wrong", null);
+                return Ok(response);
+            }
+
+            return Ok(response);
+        }
+        catch (Exception e)
+        {
+            var response = ApiResponseConfiguration.ConfigureResponse(false, HttpStatusCode.InternalServerError, e.Message, null);
+            return Ok(response);
+        }
+    }
+
+
 }

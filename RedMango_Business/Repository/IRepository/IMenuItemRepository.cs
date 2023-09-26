@@ -12,6 +12,8 @@ public interface IMenuItemRepository
 {
     public Task<List<MenuItemDTO>> GetAllMenuItems();
     public Task<MenuItemDTO> GetMenuItem(int id);
-    public Task<bool> CreateMenuItem(MenuItemDTO MenuItemDTO);
+    public Task<bool> CreateMenuItem(MenuItemDTO menuItemDTO);
+    public Task<bool> UpdateMenuItem(int id ,MenuItemDTO menuItemDTO);
+    public Task<bool> DeleteMenuItemById(int id);
 
 }

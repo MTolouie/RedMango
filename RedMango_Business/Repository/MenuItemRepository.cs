@@ -7,6 +7,7 @@ using RedMango_Models.DTOs;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -23,17 +24,35 @@ public class MenuItemRepository : IMenuItemRepository
         _mapper = mapper;
     }
 
-    public async Task<bool> CreateMenuItem(MenuItemDTO MenuItemDTO)
+    public async Task<bool> CreateMenuItem(MenuItemDTO menuItemDTO)
     {
         try
         {
-            var menuItem = _mapper.Map<MenuItemDTO, MenuItem>(MenuItemDTO);
+            var menuItem = _mapper.Map<MenuItemDTO, MenuItem>(menuItemDTO);
 
             _db.MenuItems.Add(menuItem);
             await _db.SaveChangesAsync();
             return true;
         }
         catch (Exception e)
+        {
+            return false;
+        }
+    }
+
+    public async Task<bool> DeleteMenuItemById(int id)
+    {
+        try
+        {
+            var menuItem = await _db.MenuItems.FindAsync(id);
+            if (menuItem is null)
+                return false;
+
+            _db.MenuItems.Remove(menuItem);
+            await _db.SaveChangesAsync();
+            return true;
+        }
+        catch (Exception ex)
         {
             return false;
         }
@@ -66,4 +85,27 @@ public class MenuItemRepository : IMenuItemRepository
 
         return menuItemDTO;
     }
+
+    public async Task<bool> UpdateMenuItem(int id, MenuItemDTO menuItemDTO)
+    {
+        try
+        {
+            if(menuItemDTO.Id != id)
+            {
+                return false;
+            }
+
+            var menuItem = await _db.MenuItems.FindAsync(id);
+            var convertedMenuItem = _mapper.Map<MenuItemDTO, MenuItem>(menuItemDTO, menuItem);
+            var UpdatedBook = _db.MenuItems.Update(convertedMenuItem);
+            await _db.SaveChangesAsync();
+            return true;
+        }
+        catch (Exception e)
+        {
+            return false;
+        }
+    }
+
+
 }
