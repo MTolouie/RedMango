@@ -135,4 +135,25 @@ public class CartRepository : ICartRepository
             return false;
         }
     }
+    public async Task<Cart> GetUserCart(string userId)
+    {
+        try
+        {
+            var cart = await _db.Cart
+                .Include(c => c.CartDetails)
+                .ThenInclude(c => c.MenuItem)
+                .Where(c => c.IsFinally == false && c.UserId == userId)
+                .SingleOrDefaultAsync();
+
+            if (cart is null)
+                return null;
+
+            return cart;
+
+        }
+        catch (Exception ex)
+        {
+            return null;
+        }
+    }
 }
