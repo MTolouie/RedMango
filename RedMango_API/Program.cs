@@ -31,6 +31,7 @@ builder.Services.AddIdentity<ApplicationUser,IdentityRole>()
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 builder.Services.AddScoped<IMenuItemRepository, MenuItemRepository>();
 builder.Services.AddScoped<IUserRepository,UserRepository>();
+builder.Services.AddScoped<ICartRepository,CartRepository>();
 
 var key = builder.Configuration.GetValue<string>("ApiSettings:Secret");
 builder.Services.AddAuthentication(u =>

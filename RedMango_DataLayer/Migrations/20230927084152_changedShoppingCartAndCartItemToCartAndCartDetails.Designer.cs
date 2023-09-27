@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using RedMango_DataLayer.Context;
 
@@ -11,9 +12,11 @@ using RedMango_DataLayer.Context;
 namespace RedMango_DataLayer.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230927084152_changedShoppingCartAndCartItemToCartAndCartDetails")]
+    partial class changedShoppingCartAndCartItemToCartAndCartDetails
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -233,6 +236,9 @@ namespace RedMango_DataLayer.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("CartId"));
 
+                    b.Property<int>("AddressId")
+                        .HasColumnType("int");
+
                     b.Property<double>("CartSum")
                         .HasColumnType("float");
 
@@ -261,6 +267,9 @@ namespace RedMango_DataLayer.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("DetailId"));
 
+                    b.Property<int?>("BookId")
+                        .HasColumnType("int");
+
                     b.Property<int>("CartId")
                         .HasColumnType("int");
 
@@ -275,9 +284,9 @@ namespace RedMango_DataLayer.Migrations
 
                     b.HasKey("DetailId");
 
-                    b.HasIndex("CartId");
+                    b.HasIndex("BookId");
 
-                    b.HasIndex("MenuItemId");
+                    b.HasIndex("CartId");
 
                     b.ToTable("CartDetails");
                 });
@@ -479,15 +488,13 @@ namespace RedMango_DataLayer.Migrations
 
             modelBuilder.Entity("RedMango_DataLayer.Models.CartDetail", b =>
                 {
+                    b.HasOne("RedMango_DataLayer.Models.MenuItem", "MenuItem")
+                        .WithMany()
+                        .HasForeignKey("BookId");
+
                     b.HasOne("RedMango_DataLayer.Models.Cart", "Cart")
                         .WithMany("CartDetails")
                         .HasForeignKey("CartId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("RedMango_DataLayer.Models.MenuItem", "MenuItem")
-                        .WithMany()
-                        .HasForeignKey("MenuItemId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
