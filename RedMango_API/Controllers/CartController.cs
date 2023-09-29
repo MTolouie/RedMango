@@ -42,7 +42,7 @@ public class CartController : ControllerBase
         var cart = await _cartRepository.GetUserCart(userId);
 
 
-        var response = ApiResponseConfiguration.ConfigureResponse(true, HttpStatusCode.OK, "Fetched Successfuly", cart);
+        var response = ApiResponseConfiguration.ConfigureResponse(true, HttpStatusCode.OK, null, cart);
 
 
         if (cart is not null)

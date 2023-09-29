@@ -42,7 +42,7 @@ public class AuthController : ControllerBase
         try
         {
             var userFromDb = await _userRepository.GetUserByUsername(registerRequestDTO.Username);
-            var response = ApiResponseConfiguration.ConfigureResponse(true, HttpStatusCode.Created, "User Registered Successfuly", null);
+            var response = ApiResponseConfiguration.ConfigureResponse(true, HttpStatusCode.Created, null, null);
             if (userFromDb != null)
             {
                 response = ApiResponseConfiguration.ConfigureResponse(false, HttpStatusCode.BadRequest, "This User Already Exists", null);
@@ -141,7 +141,7 @@ public class AuthController : ControllerBase
 
             if (isValid)
             {
-                response = ApiResponseConfiguration.ConfigureResponse(true, HttpStatusCode.OK, "Login Successfull", loginResponse);
+                response = ApiResponseConfiguration.ConfigureResponse(true, HttpStatusCode.OK, null, loginResponse);
                 return Ok(response);
             }
             else

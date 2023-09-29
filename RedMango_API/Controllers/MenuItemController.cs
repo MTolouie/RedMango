@@ -114,7 +114,7 @@ public class MenuItemController : ControllerBase
             if (ModelState.IsValid)
             {
                 var result = await _menuItemRepository.UpdateMenuItem(id, updateMenuItemDTO);
-                var response = ApiResponseConfiguration.ConfigureResponse(true, HttpStatusCode.Created, "Updated Successfuly", null);
+                var response = ApiResponseConfiguration.ConfigureResponse(true, HttpStatusCode.Created, null, null);
                 if (result == true)
                 {
                     return Ok(response);
@@ -141,7 +141,7 @@ public class MenuItemController : ControllerBase
         try
         {
             var result = await _menuItemRepository.DeleteMenuItemById(id);
-            var response = ApiResponseConfiguration.ConfigureResponse(true, HttpStatusCode.OK, "Deleted Successfuly", null);
+            var response = ApiResponseConfiguration.ConfigureResponse(true, HttpStatusCode.OK, null, null);
             
             if(result == false)
             {
