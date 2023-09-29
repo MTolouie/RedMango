@@ -7,6 +7,7 @@ export async function fetchMenuItems(signal: any, action: string) {
 
   if (!response.ok) {
     // Handle the error here, e.g., by throwing an exception or returning an error message
+
     throw new Error(`Failed to fetch data. Status code: ${response.status}`);
   }
 
@@ -19,5 +20,5 @@ export async function fetchMenuItems(signal: any, action: string) {
     results: data.results,      // Assign the actual data from the response
   };
 
-  return apiResponse;
+  return apiResponse.results;
 }

@@ -1,4 +1,4 @@
 import Header from "./Header";
 import Footer from "./Footer";
-
-export {Header,Footer};
+import RootLayout from "./RootLayout";
+export {Header,Footer,RootLayout};
