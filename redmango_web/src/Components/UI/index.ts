@@ -1,2 +1,3 @@
 import LoadingIndicator from "./LoadingIndicator";
-export {LoadingIndicator};
+import ErrorBlock from "./ErrorBlock";
+export {LoadingIndicator,ErrorBlock};

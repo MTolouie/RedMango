@@ -1,9 +1,9 @@
 import React, { ReactNode } from "react";
 import { ApiResponseModel, MenuItemModel } from "../../Models";
 import { useQuery } from "react-query";
-import { fetchMenuItems } from "../../Utilities";
+import { fetchMenuItems, queryClient } from "../../Utilities";
 import { LoadingIndicator } from "../UI";
-import ErrorBlock from "../UI/ErrorBlock";
+import {ErrorBlock} from "../UI/index";
 import MenuItem from "./MenuItem";
 
 const MenuItemsList = () => {
@@ -32,5 +32,14 @@ if (data) {
 
 return <div className="container row ">{content}</div>;
 };
+
+
+export const menuItemsListLoader = ({request}:{request:Request})=>{
+  return queryClient.fetchQuery({
+    queryKey: ["menuItems"],
+    queryFn: ({ signal }) => fetchMenuItems(signal,"GetAllMenuItems"),
+  });
+  
+}
 
 export default MenuItemsList;
