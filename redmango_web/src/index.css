@@ -46,6 +46,40 @@ code {
   margin: 0;
 }
 
+.success-block {
+  background-color: #8fefc7;
+  margin: 1rem 0;
+  padding: 1rem;
+  border-radius: 4px;
+  color: #272928;
+  display: flex;
+  gap: 2rem;
+  align-items: center;
+  text-align: left;
+}
+
+.success-block-icon {
+  font-size: 2rem;
+  width: 3rem;
+  height: 3rem;
+  color: #171717;
+  background-color: #0b8946;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.success-block h2 {
+  color: inherit;
+  font-size: 1.25rem;
+  margin: 0;
+}
+
+.success-block p {
+  margin: 0;
+}
+
 .lds-ring {
   display: inline-block;
   position: relative;

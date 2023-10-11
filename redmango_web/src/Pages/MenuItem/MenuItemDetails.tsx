@@ -1,17 +1,16 @@
-import { useQuery } from "react-query";
-import { MenuItemModel } from "../../Models";
-import { queryClient } from "../../Utilities";
+import { useMutation, useQuery } from "react-query";
+import { ApiResponseModel, MenuItemModel } from "../../Models";
+import { addToCart, queryClient } from "../../Utilities";
 import { fetchMenuItem } from "../../Utilities/menuItemHttps";
 import {
   LoaderFunction,
-  json,
   redirect,
-  useLoaderData,
   useNavigate,
   useParams,
 } from "react-router-dom";
 import { ReactNode, useState } from "react";
 import { ErrorBlock, LoadingIndicator } from "../../Components/UI";
+import SuccessBlock from "../../Components/UI/SuccessBlock";
 
 type myParams = {
   menuItemId: string;
@@ -26,18 +25,33 @@ const MenuItemDetails = () => {
       fetchMenuItem(signal, params.menuItemId || "0", "GetMenuItem"),
   });
 
+  let mutaionContent: ReactNode;
+  let content: ReactNode;
+
+  const {
+    mutate,
+    isError: isMutationError,
+    error: mutationError,
+  } = useMutation<ApiResponseModel, Error>({
+    mutationFn: () =>
+      addToCart(
+        "AddToCart",
+        "9ab525a9-0103-4345-ba04-10a01f1ab3a6",
+        quantity,
+        data?.id || 0
+      ),
+  });
+
   const navigate = useNavigate();
 
   const handleQuantity = (counter: number) => {
     let newQuantity = quantity + counter;
-    if(newQuantity === 0){
+    if (newQuantity === 0) {
       newQuantity = 1;
     }
     setQuantity(newQuantity);
     return;
   };
-
-  let content: ReactNode;
 
   if (isLoading) {
     content = <LoadingIndicator />;
@@ -95,7 +109,7 @@ const MenuItemDetails = () => {
           <div className="row pt-4">
             <div className="col-5">
               <button
-                onClick={() => navigate("../")}
+                onClick={() => mutate()}
                 className="btn btn-success form-control"
               >
                 Add to Cart
@@ -103,7 +117,10 @@ const MenuItemDetails = () => {
             </div>
 
             <div className="col-5 ">
-              <button className="btn btn-secondary form-control">
+              <button
+                className="btn btn-secondary form-control"
+                onClick={() => navigate("../")}
+              >
                 Back to Home
               </button>
             </div>
@@ -120,7 +137,25 @@ const MenuItemDetails = () => {
       </div>
     );
   }
-  return <div className="container pt-4 pt-md-5">{content}</div>;
+
+  if (isMutationError) {
+    mutaionContent = (
+      <ErrorBlock
+        title="Something Went Wrong"
+        message={mutationError.message || "Could Not Add To Cart"}
+      />
+    );
+  } else {
+    mutaionContent = (
+      <SuccessBlock title="Success" message={"Added Successfuly"} />
+    );
+  }
+  return (
+    <div className="container pt-4 pt-md-5">
+      {mutaionContent}
+      {content}
+    </div>
+  );
 };
 
 // type loaderParams = {
