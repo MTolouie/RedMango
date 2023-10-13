@@ -1,8 +1,11 @@
 import { Fragment } from "react";
 import { MenuItemModel } from "../../Models";
 import { Link } from "react-router-dom";
-
+import { useDispatch } from "react-redux";
+import { sendCartData } from "../../storage/redux/cart-slice";
 const MenuItem: React.FC<{menuItem:MenuItemModel}> = (props) => {
+  const dispatch = useDispatch<any>();
+
   return <div className="col-md-4 col-12 p-4">
   <div
     className="card"
@@ -48,6 +51,7 @@ const MenuItem: React.FC<{menuItem:MenuItemModel}> = (props) => {
           outline: "none !important",
           cursor: "pointer",
         }}
+        onClick={()=>{ dispatch(sendCartData("AddToCart","9ab525a9-0103-4345-ba04-10a01f1ab3a6",1,props.menuItem))}}
       ></i>
 
       <div className="text-center">

@@ -1,10 +1,11 @@
 import { Fragment } from "react";
-import { Footer, Header, RootLayout } from "./Components/Layout";
+import {  RootLayout } from "./Components/Layout";
 import { HomePage, ErrorPage, MenuItemDetails } from "./Pages/index";
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import { menuItemsListLoader } from "./Components/MenuItem/index";
 import { menuItemDetialsLoader } from "./Pages/MenuItem";
-
+import { useSelector } from "react-redux";
+import { Notification } from "./Components/UI";
 const router = createBrowserRouter([
   {
     path: "/",
@@ -21,8 +22,19 @@ const router = createBrowserRouter([
   },
 ]);
 
+
 function App() {
-  return <RouterProvider router={router} />;
+  const notification : any = useSelector<any>((state) => state.notification);
+  return <Fragment>
+    {notification.title && (
+        <Notification
+          title={notification.title}
+          status={notification.status}
+          message={notification.message}
+        />
+      )}
+    <RouterProvider router={router} />
+  </Fragment>;
 }
 
 export default App;

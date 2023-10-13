@@ -7,6 +7,8 @@ import "bootstrap/dist/js/bootstrap.js";
 import "bootstrap-icons/font/bootstrap-icons.css";
 import { QueryClientProvider } from 'react-query';
 import { queryClient } from './Utilities';
+import { Provider } from 'react-redux';
+import { store } from './storage';
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 );
@@ -15,7 +17,9 @@ const root = ReactDOM.createRoot(
 root.render(
   <React.StrictMode>
   <QueryClientProvider client={queryClient}>
+  <Provider store={store}>
     <App />
+    </Provider>
   </QueryClientProvider>
   </React.StrictMode>
 );

@@ -1,6 +1,6 @@
-import { useMutation, useQuery } from "react-query";
-import { ApiResponseModel, MenuItemModel } from "../../Models";
-import { addToCart, queryClient } from "../../Utilities";
+import { useQuery } from "react-query";
+import { MenuItemModel } from "../../Models";
+import { queryClient } from "../../Utilities";
 import { fetchMenuItem } from "../../Utilities/menuItemHttps";
 import {
   LoaderFunction,
@@ -8,15 +8,17 @@ import {
   useNavigate,
   useParams,
 } from "react-router-dom";
+import { sendCartData } from "../../storage/redux/cart-slice";
 import { ReactNode, useState } from "react";
 import { ErrorBlock, LoadingIndicator } from "../../Components/UI";
-import SuccessBlock from "../../Components/UI/SuccessBlock";
+import { useDispatch } from "react-redux";
 
 type myParams = {
   menuItemId: string;
 };
 
 const MenuItemDetails = () => {
+  const dispatch = useDispatch<any>();
   const params = useParams<myParams>();
   const [quantity, setQuantity] = useState(1);
   const { data, isLoading, isError, error } = useQuery<MenuItemModel, Error>({
@@ -25,22 +27,22 @@ const MenuItemDetails = () => {
       fetchMenuItem(signal, params.menuItemId || "0", "GetMenuItem"),
   });
 
-  let mutaionContent: ReactNode;
+  // let mutaionContent: ReactNode;
   let content: ReactNode;
 
-  const {
-    mutate,
-    isError: isMutationError,
-    error: mutationError,
-  } = useMutation<ApiResponseModel, Error>({
-    mutationFn: () =>
-      addToCart(
-        "AddToCart",
-        "9ab525a9-0103-4345-ba04-10a01f1ab3a6",
-        quantity,
-        data?.id || 0
-      ),
-  });
+  // const {
+  //   mutate,
+  //   isError: isMutationError,
+  //   error: mutationError,
+  // } = useMutation<ApiResponseModel, Error>({
+  //   mutationFn: () =>
+  //     addToCart(
+  //       "AddToCart",
+  //       "9ab525a9-0103-4345-ba04-10a01f1ab3a6",
+  //       quantity,
+  //       data?.id || 0
+  //     ),
+  // });
 
   const navigate = useNavigate();
 
@@ -109,7 +111,7 @@ const MenuItemDetails = () => {
           <div className="row pt-4">
             <div className="col-5">
               <button
-                onClick={() => mutate()}
+                onClick={() => dispatch(sendCartData("AddToCart","9ab525a9-0103-4345-ba04-10a01f1ab3a6",quantity,data))}
                 className="btn btn-success form-control"
               >
                 Add to Cart
@@ -138,21 +140,21 @@ const MenuItemDetails = () => {
     );
   }
 
-  if (isMutationError) {
-    mutaionContent = (
-      <ErrorBlock
-        title="Something Went Wrong"
-        message={mutationError.message || "Could Not Add To Cart"}
-      />
-    );
-  } else {
-    mutaionContent = (
-      <SuccessBlock title="Success" message={"Added Successfuly"} />
-    );
-  }
+  // if (isMutationError) {
+  //   mutaionContent = (
+  //     <ErrorBlock
+  //       title="Something Went Wrong"
+  //       message={mutationError.message || "Could Not Add To Cart"}
+  //     />
+  //   );
+  // } else {
+  //   mutaionContent = (
+  //     <SuccessBlock title="Success" message={"Added Successfuly"} />
+  //   );
+  // }
   return (
     <div className="container pt-4 pt-md-5">
-      {mutaionContent}
+      {/* {mutaionContent} */}
       {content}
     </div>
   );
