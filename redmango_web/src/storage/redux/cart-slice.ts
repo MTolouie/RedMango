@@ -37,6 +37,13 @@ export const sendCartData = (
   menuItem: MenuItemModel
 ) => {
   return async (dispatch: any) => {
+    dispatch(
+      notificationActions.showNotification({
+        status: "Loading",
+        title: "Please Wait",
+        message: "Trying To Add To The Cart",
+      })
+    );
     try {
       const result = await addToCart(action, userId, quantity, menuItem.id);
       dispatch(

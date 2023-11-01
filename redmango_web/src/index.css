@@ -148,3 +148,6 @@ code {
 .success {
   background-color: #1ad1b9;
 }
+.Loading {
+  background-color: rgb(241, 103, 53);
+}

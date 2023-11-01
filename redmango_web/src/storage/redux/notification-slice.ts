@@ -15,8 +15,23 @@ const notificationSlice = createSlice({
       state.status = action.payload.status;
       state.message = action.payload.message;
     },
+    hideNotification(state) {
+      state.title = "";
+      state.status = "";
+      state.message = "";
+      // state = initialNotification;
+    },
   },
 });
+
+export const RemoveNotification = (
+) => {
+  return async (dispatch: any) => {
+    dispatch(
+      notificationActions.hideNotification()
+    );
+  };
+};
 
 export const notificationActions = notificationSlice.actions;
 export default notificationSlice.reducer;
