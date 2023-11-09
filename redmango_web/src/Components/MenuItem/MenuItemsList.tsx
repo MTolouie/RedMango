@@ -16,18 +16,19 @@ const MenuItemsList = () => {
 
   let content: ReactNode;
 
-if (isLoading) {
-  content = <LoadingIndicator />;
-}
-
-if (isError) {
-  content = <ErrorBlock title="Something Went Wrong" message={error.message} />;
-}
-
-if (data) {
-  content = data.map((menuItem: MenuItemModel, index: number) => (
-    <MenuItem key={index} menuItem={menuItem} />
-  ));
+  
+  if (isError) {
+    content = <ErrorBlock title="Something Went Wrong" message={error.message} />;
+  }
+  
+  if (isLoading) {
+    content = <LoadingIndicator />;
+  }
+  
+  if (data) {
+    content = data.map((menuItem: MenuItemModel, index: number) => (
+      <MenuItem key={index} menuItem={menuItem} />
+      ));
 }
 
 return <div className="container row ">{content}</div>;

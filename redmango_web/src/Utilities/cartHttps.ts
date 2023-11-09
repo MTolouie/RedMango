@@ -22,3 +22,25 @@ export async function addToCart(action: string,userId:string,quantity:number,men
   
     return apiResponse.results;
   }
+
+  export async function fetchUserCart(userId:string) {
+    const url = CartApiPath +  `/${userId}`;
+    const response: Response = await fetch(url,{method:"GET"});
+  
+    if (!response.ok) {
+      // Handle the error here, e.g., by throwing an exception or returning an error message
+  
+      throw new Error(`Failed to fetch data. Status code: ${response.status}`);
+    }
+  
+    const data = await response.json();
+  
+    const apiResponse: ApiResponseModel = {
+      httpStatusCode: data.StatusCode,
+      isSuccessful: data.isSuccessful, // Assuming a successful HTTP response means success
+      errorMessage: null, // You can set this based on your error handling logic
+      results: data.results,      // Assign the actual data from the response
+    };
+  
+    return apiResponse.results;
+  }

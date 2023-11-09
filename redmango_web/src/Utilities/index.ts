@@ -1,6 +1,6 @@
 import { QueryClient } from "react-query";
 import {fetchMenuItems} from "./menuItemHttps";
-import {addToCart} from "./cartHttps";
+import {addToCart,fetchUserCart} from "./cartHttps";
 
 const queryClient = new QueryClient();
-export {fetchMenuItems,queryClient,addToCart};
+export {fetchMenuItems,queryClient,addToCart,fetchUserCart};
